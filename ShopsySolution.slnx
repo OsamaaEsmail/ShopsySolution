@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/Cart.Module/">
+    <Project Path="Cart.Module/Cart.Application/Cart.Application.csproj" />
+    <Project Path="Cart.Module/Cart.Domain/Cart.Domain.csproj" />
+    <Project Path="Cart.Module/Cart.Infrastructure/Cart.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Catalog.Module/">
+    <Project Path="Catalog.Module/Catalog.Application/Catalog.Application.csproj" />
+    <Project Path="Catalog.Module/Catalog.Domain/Catalog.Domain.csproj" />
+    <Project Path="Catalog.Module/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Order.Module/">
+    <Project Path="Order.Module/Order.Application/Order.Application.csproj" />
+    <Project Path="Order.Module/Order.Domain/Order.Domain.csproj" />
+    <Project Path="Order.Module/Order.Infrastructure/Order.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Sales.Module/">
+    <Project Path="Sales.Module/Sales.Application/Sales.Application.csproj" />
+    <Project Path="Sales.Module/Sales.Domain/Sales.Domain.csproj" />
+    <Project Path="Sales.Module/Sales.Infrastructure/Sales.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/User.Module/">
+    <Project Path="User.Module/User.Application/User.Application.csproj" />
+    <Project Path="User.Module/User.Domain/User.Domain.csproj" />
+    <Project Path="User.Module/User.Infrastructure/User.Infrastructure.csproj" />
+  </Folder>
+  <Project Path="Shopsy.API/Shopsy.API.csproj" />
+  <Project Path="Shopsy.BuildingBlocks/Shopsy.BuildingBlocks.csproj" />
+</Solution>

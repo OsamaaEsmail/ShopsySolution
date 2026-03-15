@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cart.Module\Cart.Application\Cart.Application.csproj" />
+    <ProjectReference Include="..\Cart.Module\Cart.Infrastructure\Cart.Infrastructure.csproj" />
+    <ProjectReference Include="..\Catalog.Module\Catalog.Application\Catalog.Application.csproj" />
+    <ProjectReference Include="..\Catalog.Module\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\Order.Module\Order.Application\Order.Application.csproj" />
+    <ProjectReference Include="..\Order.Module\Order.Infrastructure\Order.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sales.Module\Sales.Application\Sales.Application.csproj" />
+    <ProjectReference Include="..\Sales.Module\Sales.Infrastructure\Sales.Infrastructure.csproj" />
+    <ProjectReference Include="..\Shopsy.BuildingBlocks\Shopsy.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\User.Module\User.Application\User.Application.csproj" />
+    <ProjectReference Include="..\User.Module\User.Infrastructure\User.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
