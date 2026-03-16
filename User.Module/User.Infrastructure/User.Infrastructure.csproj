@@ -25,4 +25,8 @@
     <ProjectReference Include="..\User.Domain\User.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\Filters\" />
+  </ItemGroup>
+
 </Project>
