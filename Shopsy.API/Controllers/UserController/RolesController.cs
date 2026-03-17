@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
 using User.Application.Roles.Commands.CreateRole;
@@ -8,8 +9,9 @@ using User.Application.Roles.Queries.GetRoleById;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
 
-namespace Shopsy.API.Controllers;
+namespace Shopsy.API.Controllers.UserController;
 
+[ApiVersion(1)]
 [Route("api/[controller]")]
 [ApiController]
 public class RolesController(IMediator mediator) : ControllerBase

@@ -22,6 +22,13 @@ public class PaginatedList<T>
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
     }
 
+    public PaginatedList(List<T> items, int pageNumber, int totalPages)
+    {
+        Items = items;
+        PageNumber = pageNumber;
+        TotalPages = totalPages;
+    }
+
     public static async Task<PaginatedList<T>> CreateAsync(
         IQueryable<T> source,
         int pageNumber,

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
@@ -8,9 +9,10 @@ using User.Application.Users.Commands.UpdateProfile;
 using User.Application.Users.Queries.GetUserProfile;
 
 
-namespace Shopsy.API.Controllers;
+namespace Shopsy.API.Controllers.UserController;
 
 
+[ApiVersion(1)]
 [Route("api/me")]
 [ApiController]
 [Authorize]

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
 using User.Application.Users.Commands.ConfirmEmail;
@@ -9,9 +10,10 @@ using User.Application.Users.Commands.Register;
 using User.Application.Users.Commands.ResendConfirmationEmail;
 using User.Application.Users.Commands.ResetPassword;
 using User.Application.Users.Commands.RevokeRefreshToken;
-namespace Shopsy.API.Controllers;
+namespace Shopsy.API.Controllers.UserController;
 
 
+[ApiVersion(1)]
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController(IMediator mediator) : ControllerBase

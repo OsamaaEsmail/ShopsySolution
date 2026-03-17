@@ -79,16 +79,22 @@ public class UserService(
             query = query.OrderBy($"{sortColumn} {direction}");
         }
 
-        var source = query.Select(u => new UserResponse(
-            u.Id, u.FirstName, u.LastName, u.Email!,
-            u.IsDisabled, Enumerable.Empty<string>()));
+        var paginatedUsers = await PaginatedList<ApplicationUser>.CreateAsync(
+            query, pageNumber, pageSize, cancellationToken);
 
-        var result = await PaginatedList<UserResponse>.CreateAsync(
-            source, pageNumber, pageSize, cancellationToken);
+        var userResponses = new List<UserResponse>();
 
-        return Result.Success(result);
+        foreach (var user in paginatedUsers.Items)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+            userResponses.Add(new UserResponse(
+                user.Id, user.FirstName, user.LastName,
+                user.Email!, user.IsDisabled, roles));
+        }
+
+        return Result.Success(new PaginatedList<UserResponse>(
+            userResponses, paginatedUsers.PageNumber, paginatedUsers.TotalPages));
     }
-
     public async Task<Result<UserResponse>> GetByIdAsync(string userId)
     {
         var user = await userManager.FindByIdAsync(userId);
