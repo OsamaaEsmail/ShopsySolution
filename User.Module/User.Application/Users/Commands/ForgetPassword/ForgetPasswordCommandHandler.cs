@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shopsy.BuildingBlocks.Abstractions;
+using Shopsy.BuildingBlocks.CQRS;
+using User.Application.Interfaces;
 
-namespace User.Application.Users.Commands.ForgetPassword
+namespace User.Application.Users.Commands.ForgetPassword;
+
+public class ForgetPasswordCommandHandler(IAuthService authService)
+    : ICommandHandler<ForgetPasswordCommand>
 {
-    internal class ForgetPasswordCommandHandler
+    public async Task<Result> Handle(ForgetPasswordCommand request, CancellationToken ct)
     {
+        return await authService.SendResetPasswordCodeAsync(request.Email);
     }
 }
