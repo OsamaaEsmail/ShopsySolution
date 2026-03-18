@@ -3,6 +3,8 @@
 
 
 using Catalog.Domain.Entities;
+using Catalog.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure.Seed;
 
