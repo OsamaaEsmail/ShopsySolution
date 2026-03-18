@@ -1,7 +1,7 @@
 using Asp.Versioning.ApiExplorer;
+using Catalog.Infrastructure;
 using Shopsy.API;
 using User.Infrastructure;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +10,13 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddApiServices();
 builder.Services.AddUserModule(builder.Configuration);
+builder.Services.AddCatalogModule(builder.Configuration);
 
 var app = builder.Build();
+
+// Apply Migrations & Seed
+await app.Services.ApplyCatalogMigrationsAndSeed();
+
 
 if (app.Environment.IsDevelopment())
 {
