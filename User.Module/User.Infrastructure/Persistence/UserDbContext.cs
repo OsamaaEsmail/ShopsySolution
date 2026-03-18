@@ -41,19 +41,27 @@ public class UserDbContext : IdentityDbContext<ApplicationUser, ApplicationRole,
         var currentUserId = _httpContextAccessor.HttpContext?.User
             .FindFirstValue(ClaimTypes.NameIdentifier);
 
+        var currentUserName = _httpContextAccessor.HttpContext?.User
+            .FindFirstValue(ClaimTypes.Name);
+
         if (string.IsNullOrEmpty(currentUserId))
             currentUserId = Domain.Consts.DefaultUsers.Admin.Id;
+
+        if (string.IsNullOrEmpty(currentUserName))
+            currentUserName = "Admin";
 
         foreach (var entityEntry in entries)
         {
             if (entityEntry.State == EntityState.Added)
             {
                 entityEntry.Property(x => x.CreatedById).CurrentValue = currentUserId;
+                entityEntry.Property(x => x.CreatedByName).CurrentValue = currentUserName;
                 entityEntry.Property(x => x.CreatedOn).CurrentValue = DateTime.UtcNow;
             }
             else if (entityEntry.State == EntityState.Modified)
             {
                 entityEntry.Property(x => x.UpdatedById).CurrentValue = currentUserId;
+                entityEntry.Property(x => x.UpdatedByName).CurrentValue = currentUserName;
                 entityEntry.Property(x => x.UpdatedOn).CurrentValue = DateTime.UtcNow;
             }
         }
