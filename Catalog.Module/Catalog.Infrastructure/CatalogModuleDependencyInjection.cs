@@ -1,5 +1,6 @@
 ﻿using Catalog.Application.Interfaces;
 using Catalog.Application.Mapping;
+using Catalog.Application.Products.Commands.CreateProduct;
 using Catalog.Infrastructure.Persistence;
 using Catalog.Infrastructure.Seed;
 using Catalog.Infrastructure.Services;
@@ -8,7 +9,6 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace Catalog.Infrastructure;
 
@@ -19,7 +19,8 @@ public static class CatalogModuleDependencyInjection
         services
             .AddCatalogDatabase(configuration)
             .AddCatalogServices()
-            .AddCatalogMapster();
+            .AddCatalogMapster()
+            .AddCatalogMediatR();
 
         return services;
     }
@@ -49,6 +50,14 @@ public static class CatalogModuleDependencyInjection
         mappingConfig.Scan(typeof(CatalogMappingConfig).Assembly);
         services.AddSingleton(mappingConfig);
         services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCatalogMediatR(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly));
 
         return services;
     }
