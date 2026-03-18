@@ -1,12 +1,17 @@
-﻿
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Catalog.Application.Stocks.Commands.AddStock;
 using Catalog.Application.Stocks.Commands.UpdateStock;
 using Catalog.Application.Stocks.Queries.GetStocksByProduct;
+using Catalog.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Shopsy.BuildingBlocks.Abstractions;
+using System.Buffers.Text;
+using User.Domain.Consts;
+using User.Infrastructure.Authentication.Filters;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Shopsy.API.Controllers.CatalogController;
 
@@ -16,6 +21,7 @@ namespace Shopsy.API.Controllers.CatalogController;
 public class StocksController(IMediator mediator) : ControllerBase
 {
     [HttpGet("by-product/{productId:guid}")]
+    [HasPermission(Permissions.GetStocks)]
     public async Task<IActionResult> GetByProduct(Guid productId, CancellationToken ct)
     {
         var result = await mediator.Send(new GetStocksByProductQuery(productId), ct);
@@ -23,7 +29,7 @@ public class StocksController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [HasPermission(Permissions.AddStocks)]
     public async Task<IActionResult> Add([FromBody] AddStockCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -31,7 +37,7 @@ public class StocksController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.UpdateStocks)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateStockRequest request, CancellationToken ct)
     {
         var result = await mediator.Send(

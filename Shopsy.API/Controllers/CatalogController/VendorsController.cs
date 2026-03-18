@@ -5,9 +5,10 @@ using Catalog.Application.Vendors.Commands.UpdateVendor;
 using Catalog.Application.Vendors.Queries.GetAllVendors;
 using Catalog.Application.Vendors.Queries.GetVendorById;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
+using User.Domain.Consts;
+using User.Infrastructure.Authentication.Filters;
 
 namespace Shopsy.API.Controllers.CatalogController;
 
@@ -17,6 +18,7 @@ namespace Shopsy.API.Controllers.CatalogController;
 public class VendorsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.GetVendors)]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllVendorsQuery(), ct);
@@ -24,6 +26,7 @@ public class VendorsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [HasPermission(Permissions.GetVendors)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new GetVendorByIdQuery(id), ct);
@@ -31,7 +34,7 @@ public class VendorsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [HasPermission(Permissions.AddVendors)]
     public async Task<IActionResult> Create([FromBody] CreateVendorCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -39,7 +42,7 @@ public class VendorsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.UpdateVendors)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateVendorRequest request, CancellationToken ct)
     {
         var result = await mediator.Send(
@@ -48,7 +51,7 @@ public class VendorsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.DeleteVendors)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new DeleteVendorCommand(id), ct);

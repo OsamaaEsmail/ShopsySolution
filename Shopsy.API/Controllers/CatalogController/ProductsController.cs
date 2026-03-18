@@ -5,9 +5,10 @@ using Catalog.Application.Products.Commands.UpdateProduct;
 using Catalog.Application.Products.Queries.GetAllProducts;
 using Catalog.Application.Products.Queries.GetProductById;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
+using User.Domain.Consts;
+using User.Infrastructure.Authentication.Filters;
 
 namespace Shopsy.API.Controllers.CatalogController;
 
@@ -17,6 +18,7 @@ namespace Shopsy.API.Controllers.CatalogController;
 public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.GetProducts)]
     public async Task<IActionResult> GetAll([FromQuery] Guid? categoryId, CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllProductsQuery(categoryId), ct);
@@ -24,6 +26,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [HasPermission(Permissions.GetProducts)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new GetProductByIdQuery(id), ct);
@@ -31,7 +34,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [HasPermission(Permissions.AddProducts)]
     public async Task<IActionResult> Create([FromBody] CreateProductCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -39,7 +42,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.UpdateProducts)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct)
     {
         var result = await mediator.Send(
@@ -48,7 +51,7 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.DeleteProducts)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new DeleteProductCommand(id), ct);

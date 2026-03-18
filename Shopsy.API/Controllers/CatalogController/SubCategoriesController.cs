@@ -5,9 +5,10 @@ using Catalog.Application.SubCategories.Commands.UpdateSubCategory;
 using Catalog.Application.SubCategories.Queries.GetAllSubCategories;
 using Catalog.Application.SubCategories.Queries.GetSubCategoriesByCategory;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
+using User.Domain.Consts;
+using User.Infrastructure.Authentication.Filters;
 
 namespace Shopsy.API.Controllers.CatalogController;
 
@@ -17,6 +18,7 @@ namespace Shopsy.API.Controllers.CatalogController;
 public class SubCategoriesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.GetSubCategories)]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllSubCategoriesQuery(), ct);
@@ -24,6 +26,7 @@ public class SubCategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("by-category/{categoryId:guid}")]
+    [HasPermission(Permissions.GetSubCategories)]
     public async Task<IActionResult> GetByCategory(Guid categoryId, CancellationToken ct)
     {
         var result = await mediator.Send(new GetSubCategoriesByCategoryQuery(categoryId), ct);
@@ -31,7 +34,7 @@ public class SubCategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [HasPermission(Permissions.AddSubCategories)]
     public async Task<IActionResult> Create([FromBody] CreateSubCategoryCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -39,7 +42,7 @@ public class SubCategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.UpdateSubCategories)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSubCategoryRequest request, CancellationToken ct)
     {
         var result = await mediator.Send(new UpdateSubCategoryCommand(id, request.SubCategoryName), ct);
@@ -47,7 +50,7 @@ public class SubCategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.DeleteSubCategories)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new DeleteSubCategoryCommand(id), ct);

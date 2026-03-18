@@ -15,6 +15,29 @@ public static class Permissions
     public const string UpdateProducts = "products:update";
     public const string DeleteProducts = "products:delete";
 
+    public const string GetCategories = "categories:read";
+    public const string AddCategories = "categories:add";
+    public const string UpdateCategories = "categories:update";
+    public const string DeleteCategories = "categories:delete";
+
+  
+    public const string GetSubCategories = "subcategories:read";
+    public const string AddSubCategories = "subcategories:add";
+    public const string UpdateSubCategories = "subcategories:update";
+    public const string DeleteSubCategories = "subcategories:delete";
+
+    
+    public const string GetVendors = "vendors:read";
+    public const string AddVendors = "vendors:add";
+    public const string UpdateVendors = "vendors:update";
+    public const string DeleteVendors = "vendors:delete";
+
+    
+    public const string GetStocks = "stocks:read";
+    public const string AddStocks = "stocks:add";
+    public const string UpdateStocks = "stocks:update";
+  //______________________________________________________________________________//
+
     // Orders
     public const string GetOrders = "orders:read";
     public const string AddOrders = "orders:add";

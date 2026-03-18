@@ -5,9 +5,10 @@ using Catalog.Application.Categories.Commands.UpdateCategory;
 using Catalog.Application.Categories.Queries.GetAllCategories;
 using Catalog.Application.Categories.Queries.GetCategoryById;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shopsy.BuildingBlocks.Abstractions;
+using User.Domain.Consts;
+using User.Infrastructure.Authentication.Filters;
 
 namespace Shopsy.API.Controllers.CatalogController;
 
@@ -17,6 +18,7 @@ namespace Shopsy.API.Controllers.CatalogController;
 public class CategoriesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.GetCategories)]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllCategoriesQuery(), ct);
@@ -24,6 +26,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [HasPermission(Permissions.GetCategories)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new GetCategoryByIdQuery(id), ct);
@@ -31,7 +34,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [HasPermission(Permissions.AddCategories)]
     public async Task<IActionResult> Create([FromBody] CreateCategoryCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -39,7 +42,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.UpdateCategories)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct)
     {
         var result = await mediator.Send(new UpdateCategoryCommand(id, request.CategoryName), ct);
@@ -47,7 +50,7 @@ public class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [HasPermission(Permissions.DeleteCategories)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var result = await mediator.Send(new DeleteCategoryCommand(id), ct);
