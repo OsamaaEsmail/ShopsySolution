@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Order.Application.Interfaces;
 using Order.Application.Mapping;
+using Order.Application.Orders.Commands.CreateOrder;
 using Order.Infrastructure.Persistence;
 using Order.Infrastructure.Services;
 
@@ -18,7 +19,10 @@ public static class OrderModuleDependencyInjection
         services
             .AddOrderDatabase(configuration)
             .AddOrderServices()
-            .AddOrderMapster();
+            .AddOrderMapster()
+            .AddOrderMediatR();
+
+
 
         return services;
     }
@@ -45,6 +49,13 @@ public static class OrderModuleDependencyInjection
         mappingConfig.Scan(typeof(OrderMappingConfig).Assembly);
         services.AddSingleton(mappingConfig);
         services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+    private static IServiceCollection AddOrderMediatR(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommand).Assembly));
 
         return services;
     }
