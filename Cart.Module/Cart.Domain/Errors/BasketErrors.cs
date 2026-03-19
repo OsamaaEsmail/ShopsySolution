@@ -3,7 +3,7 @@ using Shopsy.BuildingBlocks.Abstractions;
 
 namespace Cart.Domain.Errors;
 
-public record class CartErrors
+public record class BasketErrors
 {
     public static readonly Error CartNotFound =
         new("Cart.CartNotFound", "Cart is not found", StatusCodes.Status404NotFound);

@@ -1,6 +1,6 @@
 ﻿namespace Cart.Domain.Entities;
 
-public class CartItem
+public class BasketItem
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid CartId { get; set; }
@@ -10,5 +10,5 @@ public class CartItem
     public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
     public decimal TotalPrice => UnitPrice * Quantity;
-    public Cart? Cart { get; set; }
+    public Basket? Basket { get; set; }
 }
