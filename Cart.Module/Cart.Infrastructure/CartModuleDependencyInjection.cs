@@ -1,4 +1,5 @@
-﻿using Cart.Application.Interfaces;
+﻿using Cart.Application.Carts.Commands.AddToCart;
+using Cart.Application.Interfaces;
 using Cart.Application.Mapping;
 using Cart.Infrastructure.Persistence;
 using Cart.Infrastructure.Services;
@@ -14,14 +15,14 @@ public static class CartModuleDependencyInjection
 {
     public static IServiceCollection AddCartModule(this IServiceCollection services, IConfiguration configuration)
     {
-        services.
-            AddCartDatabase(configuration)
+        services
+            .AddCartDatabase(configuration)
             .AddCartServices()
-            .AddCartMapster();
+            .AddCartMapster()
+            .AddCartMediatR();
 
         return services;
     }
-
 
     private static IServiceCollection AddCartDatabase(this IServiceCollection services, IConfiguration configuration)
     {
@@ -30,6 +31,7 @@ public static class CartModuleDependencyInjection
 
         return services;
     }
+
     private static IServiceCollection AddCartServices(this IServiceCollection services)
     {
         services.AddScoped<ICartService, CartService>();
@@ -43,6 +45,14 @@ public static class CartModuleDependencyInjection
         mappingConfig.Scan(typeof(CartMappingConfig).Assembly);
         services.AddSingleton(mappingConfig);
         services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCartMediatR(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(AddToCartCommand).Assembly));
 
         return services;
     }
