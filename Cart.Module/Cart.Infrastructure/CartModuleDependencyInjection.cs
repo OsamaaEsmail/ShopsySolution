@@ -1,5 +1,7 @@
-﻿using Cart.Application.Mapping;
+﻿using Cart.Application.Interfaces;
+using Cart.Application.Mapping;
 using Cart.Infrastructure.Persistence;
+using Cart.Infrastructure.Services;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +16,8 @@ public static class CartModuleDependencyInjection
     {
         services.
             AddCartDatabase(configuration)
-             .AddCartMapster();
+            .AddCartServices()
+            .AddCartMapster();
 
         return services;
     }
@@ -27,6 +30,13 @@ public static class CartModuleDependencyInjection
 
         return services;
     }
+    private static IServiceCollection AddCartServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICartService, CartService>();
+
+        return services;
+    }
+
     private static IServiceCollection AddCartMapster(this IServiceCollection services)
     {
         var mappingConfig = TypeAdapterConfig.GlobalSettings;
