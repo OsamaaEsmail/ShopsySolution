@@ -10,7 +10,7 @@ using Shopsy.BuildingBlocks.Abstractions;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
 
-namespace Shopsy.API.Controllers.CatalogController;
+namespace Shopsy.API.Controllers.Catalog;
 
 [ApiVersion(1)]
 [Route("api/[controller]")]

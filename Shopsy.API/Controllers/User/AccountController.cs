@@ -9,7 +9,7 @@ using User.Application.Users.Commands.UpdateProfile;
 using User.Application.Users.Queries.GetUserProfile;
 
 
-namespace Shopsy.API.Controllers.UserController;
+namespace Shopsy.API.Controllers.User;
 
 
 [ApiVersion(1)]

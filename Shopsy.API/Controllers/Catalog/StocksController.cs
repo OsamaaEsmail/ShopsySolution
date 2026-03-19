@@ -2,18 +2,14 @@
 using Catalog.Application.Stocks.Commands.AddStock;
 using Catalog.Application.Stocks.Commands.UpdateStock;
 using Catalog.Application.Stocks.Queries.GetStocksByProduct;
-using Catalog.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Shopsy.BuildingBlocks.Abstractions;
-using System.Buffers.Text;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Shopsy.API.Controllers.CatalogController;
+
+namespace Shopsy.API.Controllers.Catalog;
 
 [ApiVersion(1)]
 [Route("api/[controller]")]

@@ -10,7 +10,7 @@ using User.Application.Users.Commands.Register;
 using User.Application.Users.Commands.ResendConfirmationEmail;
 using User.Application.Users.Commands.ResetPassword;
 using User.Application.Users.Commands.RevokeRefreshToken;
-namespace Shopsy.API.Controllers.UserController;
+namespace Shopsy.API.Controllers.User;
 
 
 [ApiVersion(1)]

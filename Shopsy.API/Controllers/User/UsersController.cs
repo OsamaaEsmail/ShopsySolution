@@ -10,7 +10,7 @@ using User.Application.Users.Queries.GetUserById;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
 
-namespace Shopsy.API.Controllers.UserController;
+namespace Shopsy.API.Controllers.User;
 
 [ApiVersion(1)]
 [Route("api/[controller]")]
