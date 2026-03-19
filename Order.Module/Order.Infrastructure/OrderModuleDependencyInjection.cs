@@ -1,7 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.Application.Interfaces;
+using Order.Application.Mapping;
 using Order.Infrastructure.Persistence;
+using Order.Infrastructure.Services;
+
 
 namespace Order.Infrastructure;
 
@@ -9,7 +15,10 @@ public static class OrderModuleDependencyInjection
 {
     public static IServiceCollection AddOrderModule(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOrderDatabase(configuration);
+        services
+            .AddOrderDatabase(configuration)
+            .AddOrderServices()
+            .AddOrderMapster();
 
         return services;
     }
@@ -22,6 +31,24 @@ public static class OrderModuleDependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddOrderServices(this IServiceCollection services)
+    {
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IPaymentService, PaymentService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddOrderMapster(this IServiceCollection services)
+    {
+        var mappingConfig = TypeAdapterConfig.GlobalSettings;
+        mappingConfig.Scan(typeof(OrderMappingConfig).Assembly);
+        services.AddSingleton(mappingConfig);
+        services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+
     public static async Task ApplyOrderMigrationsAndSeed(this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -30,3 +57,4 @@ public static class OrderModuleDependencyInjection
         await ctx.Database.MigrateAsync();
     }
 }
+
