@@ -1,4 +1,5 @@
 using Asp.Versioning.ApiExplorer;
+using Cart.Infrastructure;
 using Catalog.Infrastructure;
 using Shopsy.API;
 using User.Infrastructure;
@@ -11,11 +12,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiServices();
 builder.Services.AddUserModule(builder.Configuration);
 builder.Services.AddCatalogModule(builder.Configuration);
+builder.Services.AddCartModule(builder.Configuration);
 
 var app = builder.Build();
 
 // Apply Migrations & Seed
 await app.Services.ApplyCatalogMigrationsAndSeed();
+await app.Services.ApplyCartMigrationsAndSeed();
 
 
 if (app.Environment.IsDevelopment())
