@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.Extensions.Options;
+using Serilog;
 using Shopsy.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -26,5 +27,23 @@ public static class APIDependencyInjection
         });
 
         return services;
+    }
+
+    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration));
+
+        return builder;
+    }
+
+    public static WebApplication UseSerilogMiddleware(this WebApplication app)
+    {
+        app.UseSerilogRequestLogging(options =>
+        {
+            options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+        });
+
+        return app;
     }
 }
