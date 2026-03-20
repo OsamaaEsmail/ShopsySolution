@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Shopsy.API.Middleware;
 using Shopsy.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -44,6 +45,11 @@ public static class APIDependencyInjection
             options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
         });
 
+        return app;
+    }
+    public static WebApplication UseUserActivityLogging(this WebApplication app)
+    {
+        app.UseMiddleware<UserActivityLoggingMiddleware>();
         return app;
     }
 }

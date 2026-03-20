@@ -49,6 +49,7 @@ try
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseUserActivityLogging();
     app.MapControllers();
 
     app.Run();
