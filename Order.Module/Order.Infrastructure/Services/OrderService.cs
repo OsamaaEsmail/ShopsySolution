@@ -97,6 +97,28 @@ public class OrderService(OrderDbContext context, IMapper mapper, ILogger<OrderS
         order.RecalculateTotals();
 
         await context.Orders.AddAsync(order, ct);
+
+        // Deduct stock for each order item
+        foreach (var item in order.OrderItems)
+        {
+            var sql = @"
+            UPDATE [catalog].[Stocks] 
+            SET QuantityAvailable = QuantityAvailable - {0}
+            WHERE ProductId = {1} 
+            AND ({2} IS NULL OR Color = {2}) 
+            AND ({3} IS NULL OR Size = {3})
+            AND QuantityAvailable >= {0}";
+
+            var rowsAffected = await context.Database
+                .ExecuteSqlRawAsync(sql, item.Quantity, item.ProductId, item.Color, item.Size);
+
+            if (rowsAffected == 0)
+            {
+                logger.LogWarning("Insufficient stock for product: {ProductId}, Size: {Size}, Color: {Color}", item.ProductId, item.Size, item.Color);
+                return Result.Failure<Guid>(new Error("Order.InsufficientStock", $"Insufficient stock for product {item.ProductId}", 400));
+            }
+        }
+
         await context.SaveChangesAsync(ct);
 
         logger.LogInformation("Order created: {OrderId}, Total: {TotalAmount} for user: {UserId}", order.Id, order.TotalAmount, userId);

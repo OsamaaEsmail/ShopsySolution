@@ -4,6 +4,7 @@ using Serilog;
 using Shopsy.API.Middleware;
 using Shopsy.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Threading.RateLimiting;
 
 namespace Shopsy.API;
 
@@ -50,6 +51,41 @@ public static class APIDependencyInjection
     public static WebApplication UseUserActivityLogging(this WebApplication app)
     {
         app.UseMiddleware<UserActivityLoggingMiddleware>();
+        return app;
+    }
+    public static IServiceCollection AddRateLimiting(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            // General: 100 request per minute per user
+            options.AddPolicy("fixed", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User?.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 100,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+
+            // Auth: 10 login attempts per minute per IP
+            options.AddPolicy("auth", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+        });
+
+        return services;
+    }
+
+    public static WebApplication UseRateLimiting(this WebApplication app)
+    {
+        app.UseRateLimiter();
         return app;
     }
 }

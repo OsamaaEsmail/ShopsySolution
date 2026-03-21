@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Shopsy.BuildingBlocks.Abstractions;
 using User.Application.Users.Commands.ConfirmEmail;
 using User.Application.Users.Commands.ForgetPassword;
@@ -19,6 +20,7 @@ namespace Shopsy.API.Controllers.User;
 public class AuthController(IMediator mediator) : ControllerBase
 {
     [HttpPost("login")]
+    [EnableRateLimiting("auth")]
     public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);
@@ -26,6 +28,7 @@ public class AuthController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("register")]
+    [EnableRateLimiting("auth")]
     public async Task<IActionResult> Register([FromBody] RegisterCommand command, CancellationToken ct)
     {
         var result = await mediator.Send(command, ct);

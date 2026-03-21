@@ -27,6 +27,8 @@ try
     builder.Services.AddCartModule(builder.Configuration);
     builder.Services.AddOrderModule(builder.Configuration);
 
+    builder.Services.AddRateLimiting();
+
     var app = builder.Build();
 
     app.UseSerilogMiddleware();
@@ -49,6 +51,7 @@ try
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseRateLimiting();
     app.UseUserActivityLogging();
     app.MapControllers();
 

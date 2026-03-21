@@ -6,6 +6,7 @@ using Catalog.Application.Products.Queries.GetAllProducts;
 using Catalog.Application.Products.Queries.GetProductById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Shopsy.BuildingBlocks.Abstractions;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
@@ -15,6 +16,7 @@ namespace Shopsy.API.Controllers.Catalog;
 [ApiVersion(1)]
 [Route("api/[controller]")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]

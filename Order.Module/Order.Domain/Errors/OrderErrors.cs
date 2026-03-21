@@ -19,4 +19,7 @@ public record class OrderErrors
 
     public static readonly Error OrderAlreadyDelivered =
         new("Order.AlreadyDelivered", "Cannot modify a delivered order", StatusCodes.Status400BadRequest);
+
+    public static readonly Error InsufficientStock =
+    new("Order.InsufficientStock", "Insufficient stock for one or more items", StatusCodes.Status400BadRequest);
 }
