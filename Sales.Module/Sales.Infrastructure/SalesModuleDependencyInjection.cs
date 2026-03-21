@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sales.Application.Interfaces;
 using Sales.Application.Mapping;
+using Sales.Application.Sales.Commands.CreateSale;
 using Sales.Infrastructure.Persistence;
 using Sales.Infrastructure.Services;
 
@@ -18,7 +19,8 @@ public static class SalesModuleDependencyInjection
         services
             .AddSalesDatabase(configuration)
             .AddSalesServices()
-            .AddSalesMapster();
+            .AddSalesMapster()
+            .AddSalesMediatR();
 
         return services;
     }
@@ -44,6 +46,14 @@ public static class SalesModuleDependencyInjection
         mappingConfig.Scan(typeof(SaleMappingConfig).Assembly);
         services.AddSingleton(mappingConfig);
         services.AddScoped<IMapper, ServiceMapper>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSalesMediatR(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(CreateSaleCommand).Assembly));
 
         return services;
     }
