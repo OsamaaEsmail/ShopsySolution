@@ -8,11 +8,9 @@ using Sales.Application.Sales.Commands.UpdateSale;
 using Sales.Application.Sales.Queries.GetActiveSales;
 using Sales.Application.Sales.Queries.GetSaleById;
 using Shopsy.BuildingBlocks.Abstractions;
-using System.Net;
-using System.Security;
 using User.Domain.Consts;
 using User.Infrastructure.Authentication.Filters;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Shopsy.API.Controllers.Sales;
 
@@ -24,9 +22,9 @@ public class SalesController(IMediator mediator) : ControllerBase
 {
     [HttpGet("active")]
     [HasPermission(Permissions.GetSales)]
-    public async Task<IActionResult> GetActiveSales(CancellationToken ct)
+    public async Task<IActionResult> GetActiveSales([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetActiveSalesQuery(), ct);
+        var result = await mediator.Send(new GetActiveSalesQuery(pageNumber, pageSize), ct);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 

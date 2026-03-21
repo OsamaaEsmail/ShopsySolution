@@ -5,10 +5,10 @@ using Shopsy.BuildingBlocks.CQRS;
 
 namespace Sales.Application.Sales.Queries.GetActiveSales;
 
-public class GetActiveSalesQueryHandler(ISaleService saleService) : IQueryHandler<GetActiveSalesQuery, IEnumerable<SaleResponse>>
+public class GetActiveSalesQueryHandler(ISaleService saleService) : IQueryHandler<GetActiveSalesQuery, PaginatedList<SaleResponse>>
 {
-    public async Task<Result<IEnumerable<SaleResponse>>> Handle(GetActiveSalesQuery request, CancellationToken ct)
+    public async Task<Result<PaginatedList<SaleResponse>>> Handle(GetActiveSalesQuery request, CancellationToken ct)
     {
-        return await saleService.GetActiveSalesAsync(ct);
+        return await saleService.GetActiveSalesAsync(request.PageNumber, request.PageSize, ct);
     }
 }

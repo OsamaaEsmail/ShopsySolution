@@ -12,20 +12,27 @@ namespace Catalog.Infrastructure.Services;
 
 public class CategoryService(CatalogDbContext context, IMapper mapper, ILogger<CategoryService> logger) : ICategoryService
 {
-    public async Task<Result<IEnumerable<CategoryResponse>>> GetAllAsync(CancellationToken ct = default)
+    public async Task<Result<PaginatedList<CategoryResponse>>> GetAllAsync(int pageNumber, int pageSize, CancellationToken ct = default)
     {
-        logger.LogInformation("Getting all categories");
+        logger.LogInformation("Getting categories, Page: {PageNumber}, Size: {PageSize}", pageNumber, pageSize);
 
-        var categories = await context.Categories
+        var query = context.Categories
             .Include(c => c.SubCategories)
-            .AsNoTracking()
+            .AsNoTracking();
+
+        var totalCount = await query.CountAsync(ct);
+
+        var categories = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
 
-        logger.LogInformation("Found {Count} categories", categories.Count);
+        var mapped = mapper.Map<List<CategoryResponse>>(categories);
 
-        return Result.Success(mapper.Map<IEnumerable<CategoryResponse>>(categories));
+        logger.LogInformation("Found {Count} categories on page {PageNumber}", mapped.Count, pageNumber);
+
+        return Result.Success(new PaginatedList<CategoryResponse>(mapped, pageNumber, totalCount, pageSize));
     }
-
     public async Task<Result<CategoryResponse>> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         logger.LogInformation("Getting category by ID: {CategoryId}", id);

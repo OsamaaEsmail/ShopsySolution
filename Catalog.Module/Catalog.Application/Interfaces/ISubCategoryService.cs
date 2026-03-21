@@ -5,7 +5,7 @@ namespace Catalog.Application.Interfaces;
 
 public interface ISubCategoryService
 {
-    Task<Result<IEnumerable<SubCategoryResponse>>> GetAllAsync(CancellationToken ct = default);
+    Task<Result<PaginatedList<SubCategoryResponse>>> GetAllAsync(int pageNumber, int pageSize, CancellationToken ct = default);
     Task<Result<IEnumerable<SubCategoryResponse>>> GetByCategoryAsync(Guid categoryId, CancellationToken ct = default);
     Task<Result<Guid>> CreateAsync(string subCategoryName, Guid categoryId, CancellationToken ct = default);
     Task<Result> UpdateAsync(Guid id, string subCategoryName, CancellationToken ct = default);

@@ -19,12 +19,11 @@ public class CategoriesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [HasPermission(Permissions.GetCategories)]
-    public async Task<IActionResult> GetAll(CancellationToken ct)
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetAllCategoriesQuery(), ct);
+        var result = await mediator.Send(new GetAllCategoriesQuery(pageNumber, pageSize), ct);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
-
     [HttpGet("{id:guid}")]
     [HasPermission(Permissions.GetCategories)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)

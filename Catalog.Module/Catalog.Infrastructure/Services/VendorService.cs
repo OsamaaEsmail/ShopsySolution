@@ -12,17 +12,25 @@ namespace Catalog.Infrastructure.Services;
 
 public class VendorService(CatalogDbContext context, IMapper mapper, ILogger<VendorService> logger) : IVendorService
 {
-    public async Task<Result<IEnumerable<VendorResponse>>> GetAllAsync(CancellationToken ct = default)
+    public async Task<Result<PaginatedList<VendorResponse>>> GetAllAsync(int pageNumber, int pageSize, CancellationToken ct = default)
     {
-        logger.LogInformation("Getting all vendors");
+        logger.LogInformation("Getting vendors, Page: {PageNumber}, Size: {PageSize}", pageNumber, pageSize);
 
-        var vendors = await context.Vendors.AsNoTracking().ToListAsync(ct);
+        var query = context.Vendors.AsNoTracking();
 
-        logger.LogInformation("Found {Count} vendors", vendors.Count);
+        var totalCount = await query.CountAsync(ct);
 
-        return Result.Success(mapper.Map<IEnumerable<VendorResponse>>(vendors));
+        var vendors = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        var mapped = mapper.Map<List<VendorResponse>>(vendors);
+
+        logger.LogInformation("Found {Count} vendors on page {PageNumber}", mapped.Count, pageNumber);
+
+        return Result.Success(new PaginatedList<VendorResponse>(mapped, pageNumber, totalCount, pageSize));
     }
-
     public async Task<Result<VendorResponse>> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         logger.LogInformation("Getting vendor by ID: {VendorId}", id);

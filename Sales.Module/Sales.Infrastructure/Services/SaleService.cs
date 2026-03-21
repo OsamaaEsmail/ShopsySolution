@@ -30,21 +30,29 @@ public class SaleService(SalesDbContext context, IMapper mapper, ILogger<SaleSer
         return Result.Success(mapper.Map<SaleResponse>(sale));
     }
 
-    public async Task<Result<IEnumerable<SaleResponse>>> GetActiveSalesAsync(CancellationToken ct = default)
+    public async Task<Result<PaginatedList<SaleResponse>>> GetActiveSalesAsync(int pageNumber, int pageSize, CancellationToken ct = default)
     {
-        logger.LogInformation("Getting active sales");
+        logger.LogInformation("Getting active sales, Page: {PageNumber}, Size: {PageSize}", pageNumber, pageSize);
 
         var now = DateTime.UtcNow;
 
-        var sales = await context.Sales
+        var query = context.Sales
             .Include(s => s.SaleItems)
             .Where(s => s.StartDate <= now && s.EndDate >= now)
-            .AsNoTracking()
+            .AsNoTracking();
+
+        var totalCount = await query.CountAsync(ct);
+
+        var sales = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
 
-        logger.LogInformation("Found {Count} active sales", sales.Count);
+        var mapped = mapper.Map<List<SaleResponse>>(sales);
 
-        return Result.Success(mapper.Map<IEnumerable<SaleResponse>>(sales));
+        logger.LogInformation("Found {Count} active sales on page {PageNumber}", mapped.Count, pageNumber);
+
+        return Result.Success(new PaginatedList<SaleResponse>(mapped, pageNumber, totalCount, pageSize));
     }
 
     public async Task<Result<Guid>> CreateAsync(string saleName, SaleType saleType, decimal discountPercentage, DateTime startDate, DateTime endDate, string? saleImage, List<SaleItemResponse> products, CancellationToken ct = default)

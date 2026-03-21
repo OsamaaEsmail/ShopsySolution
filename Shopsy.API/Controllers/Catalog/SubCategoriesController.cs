@@ -19,9 +19,9 @@ public class SubCategoriesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [HasPermission(Permissions.GetSubCategories)]
-    public async Task<IActionResult> GetAll(CancellationToken ct)
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
     {
-        var result = await mediator.Send(new GetAllSubCategoriesQuery(), ct);
+        var result = await mediator.Send(new GetAllSubCategoriesQuery(pageNumber, pageSize), ct);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 

@@ -12,19 +12,25 @@ namespace Catalog.Infrastructure.Services;
 
 public class SubCategoryService(CatalogDbContext context, IMapper mapper, ILogger<SubCategoryService> logger) : ISubCategoryService
 {
-    public async Task<Result<IEnumerable<SubCategoryResponse>>> GetAllAsync(CancellationToken ct = default)
+    public async Task<Result<PaginatedList<SubCategoryResponse>>> GetAllAsync(int pageNumber, int pageSize, CancellationToken ct = default)
     {
-        logger.LogInformation("Getting all subcategories");
+        logger.LogInformation("Getting subcategories, Page: {PageNumber}, Size: {PageSize}", pageNumber, pageSize);
 
-        var subCategories = await context.SubCategories
-            .AsNoTracking()
+        var query = context.SubCategories.AsNoTracking();
+
+        var totalCount = await query.CountAsync(ct);
+
+        var subCategories = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
 
-        logger.LogInformation("Found {Count} subcategories", subCategories.Count);
+        var mapped = mapper.Map<List<SubCategoryResponse>>(subCategories);
 
-        return Result.Success(mapper.Map<IEnumerable<SubCategoryResponse>>(subCategories));
+        logger.LogInformation("Found {Count} subcategories on page {PageNumber}", mapped.Count, pageNumber);
+
+        return Result.Success(new PaginatedList<SubCategoryResponse>(mapped, pageNumber, totalCount, pageSize));
     }
-
     public async Task<Result<IEnumerable<SubCategoryResponse>>> GetByCategoryAsync(Guid categoryId, CancellationToken ct = default)
     {
         logger.LogInformation("Getting subcategories by category: {CategoryId}", categoryId);

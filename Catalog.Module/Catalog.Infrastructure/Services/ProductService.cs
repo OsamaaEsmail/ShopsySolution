@@ -33,9 +33,9 @@ public class ProductService(CatalogDbContext context, IMapper mapper, ILogger<Pr
         return Result.Success(mapper.Map<ProductResponse>(product));
     }
 
-    public async Task<Result<IEnumerable<ProductResponse>>> GetAllAsync(Guid? categoryId = null, CancellationToken ct = default)
+    public async Task<Result<PaginatedList<ProductResponse>>> GetAllAsync(int pageNumber, int pageSize, Guid? categoryId = null, CancellationToken ct = default)
     {
-        logger.LogInformation("Getting all products, CategoryFilter: {CategoryId}", categoryId);
+        logger.LogInformation("Getting products, Page: {PageNumber}, Size: {PageSize}, CategoryFilter: {CategoryId}", pageNumber, pageSize, categoryId);
 
         var query = context.Products
             .Include(p => p.Images)
@@ -49,11 +49,18 @@ public class ProductService(CatalogDbContext context, IMapper mapper, ILogger<Pr
         if (categoryId.HasValue)
             query = query.Where(p => p.CategoryId == categoryId.Value);
 
-        var products = await query.ToListAsync(ct);
+        var totalCount = await query.CountAsync(ct);
 
-        logger.LogInformation("Found {Count} products", products.Count);
+        var products = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
 
-        return Result.Success(mapper.Map<IEnumerable<ProductResponse>>(products));
+        var mapped = mapper.Map<List<ProductResponse>>(products);
+
+        logger.LogInformation("Found {Count} products on page {PageNumber}", mapped.Count, pageNumber);
+
+        return Result.Success(new PaginatedList<ProductResponse>(mapped, pageNumber, totalCount, pageSize));
     }
 
     public async Task<Result<Guid>> CreateAsync(string productName, string productDescription, decimal price, string currency, Guid categoryId, Guid subCategoryId, Guid vendorId, CancellationToken ct = default)
