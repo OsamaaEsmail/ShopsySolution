@@ -29,6 +29,7 @@ try
 
     builder.Services.AddRateLimiting();
 
+    builder.Services.AddHealthChecking(builder.Configuration);
     var app = builder.Build();
 
     app.UseSerilogMiddleware();
@@ -54,6 +55,7 @@ try
     app.UseRateLimiting();
     app.UseUserActivityLogging();
     app.MapControllers();
+    app.UseHealthChecking();
 
     app.Run();
 }

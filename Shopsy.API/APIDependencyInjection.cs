@@ -1,4 +1,6 @@
 ﻿using Asp.Versioning;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Shopsy.API.Middleware;
@@ -86,6 +88,37 @@ public static class APIDependencyInjection
     public static WebApplication UseRateLimiting(this WebApplication app)
     {
         app.UseRateLimiter();
+        return app;
+    }
+
+    public static IServiceCollection AddHealthChecking(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddSqlServer(
+                connectionString: configuration.GetConnectionString("DefaultConnection")!,
+                name: "SQL Server",
+                tags: new[] { "database", "sqlserver" })
+            .AddUrlGroup(
+                new Uri("https://localhost:7146/swagger/index.html"),
+                name: "Swagger UI",
+                tags: new[] { "api" });
+
+        return services;
+    }
+
+    public static WebApplication UseHealthChecking(this WebApplication app)
+    {
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.MapHealthChecks("/health/database", new HealthCheckOptions
+        {
+            Predicate = check => check.Tags.Contains("database"),
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
         return app;
     }
 }
