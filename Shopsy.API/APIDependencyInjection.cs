@@ -121,4 +121,10 @@ public static class APIDependencyInjection
 
         return app;
     }
+
+    public static WebApplication UseGlobalExceptionHandling(this WebApplication app)
+    {
+        app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+        return app;
+    }
 }

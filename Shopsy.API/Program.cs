@@ -32,6 +32,7 @@ try
     builder.Services.AddHealthChecking(builder.Configuration);
     var app = builder.Build();
 
+    app.UseGlobalExceptionHandling();
     app.UseSerilogMiddleware();
 
     await app.Services.ApplyCatalogMigrationsAndSeed();
