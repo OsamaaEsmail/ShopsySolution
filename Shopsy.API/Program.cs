@@ -2,6 +2,7 @@ using Asp.Versioning.ApiExplorer;
 using Cart.Infrastructure;
 using Catalog.Infrastructure;
 using Order.Infrastructure;
+using Sales.Infrastructure;
 using Serilog;
 using Shopsy.API;
 using User.Infrastructure;
@@ -26,6 +27,7 @@ try
     builder.Services.AddCatalogModule(builder.Configuration);
     builder.Services.AddCartModule(builder.Configuration);
     builder.Services.AddOrderModule(builder.Configuration);
+    builder.Services.AddSalesModule(builder.Configuration);
 
     builder.Services.AddRateLimiting();
     builder.Services.AddCorsPolicy();
@@ -39,6 +41,7 @@ try
     await app.Services.ApplyCatalogMigrationsAndSeed();
     await app.Services.ApplyCartMigrationsAndSeed();
     await app.Services.ApplyOrderMigrationsAndSeed();
+    await app.Services.ApplySalesMigrationsAndSeed();
 
     if (app.Environment.IsDevelopment())
     {
