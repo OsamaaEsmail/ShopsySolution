@@ -28,6 +28,7 @@ try
     builder.Services.AddOrderModule(builder.Configuration);
 
     builder.Services.AddRateLimiting();
+    builder.Services.AddCorsPolicy();
 
     builder.Services.AddHealthChecking(builder.Configuration);
     var app = builder.Build();

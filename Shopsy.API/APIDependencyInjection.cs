@@ -127,4 +127,41 @@ public static class APIDependencyInjection
         app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
         return app;
     }
+
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+
+            options.AddPolicy("Production", policy =>
+            {
+                policy.WithOrigins(
+                        "https://shopsy.com",
+                        "https://www.shopsy.com",
+                        "https://admin.shopsy.com")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials();
+            });
+        });
+
+        return services;
+    }
+
+    public static WebApplication UseCorsPolicy(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+            app.UseCors("AllowAll");
+        else
+            app.UseCors("Production");
+
+        return app;
+    }
+
 }
