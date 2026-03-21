@@ -26,4 +26,5 @@
   </Folder>
   <Project Path="Shopsy.API/Shopsy.API.csproj" />
   <Project Path="Shopsy.BuildingBlocks/Shopsy.BuildingBlocks.csproj" />
+  <Project Path="Shopsy.Tests/Shopsy.Tests.csproj" Id="c554b0a6-6f9f-4b84-b381-cda6e7ba17d5" />
 </Solution>

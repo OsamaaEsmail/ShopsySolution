@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="FluentAssertions" Version="8.8.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Moq" Version="4.20.69" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cart.Module\Cart.Application\Cart.Application.csproj" />
+    <ProjectReference Include="..\Cart.Module\Cart.Domain\Cart.Domain.csproj" />
+    <ProjectReference Include="..\Cart.Module\Cart.Infrastructure\Cart.Infrastructure.csproj" />
+    <ProjectReference Include="..\Catalog.Module\Catalog.Application\Catalog.Application.csproj" />
+    <ProjectReference Include="..\Catalog.Module\Catalog.Domain\Catalog.Domain.csproj" />
+    <ProjectReference Include="..\Catalog.Module\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\Order.Module\Order.Application\Order.Application.csproj" />
+    <ProjectReference Include="..\Order.Module\Order.Domain\Order.Domain.csproj" />
+    <ProjectReference Include="..\Order.Module\Order.Infrastructure\Order.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sales.Module\Sales.Application\Sales.Application.csproj" />
+    <ProjectReference Include="..\Sales.Module\Sales.Domain\Sales.Domain.csproj" />
+    <ProjectReference Include="..\Sales.Module\Sales.Infrastructure\Sales.Infrastructure.csproj" />
+    <ProjectReference Include="..\Shopsy.BuildingBlocks\Shopsy.BuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
